@@ -9,8 +9,13 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
+def one_more_print(name):
+    print(f'Hello, {name} {name}')
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
+    one_more_print('Function')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
