@@ -3,6 +3,7 @@ from copy import copy
 
 import pytest
 
+import settings
 from fixture.application import Application
 from utils import config_util
 
@@ -19,6 +20,6 @@ def app(request):
     fixture = Application()
 
     fixture.env = request.config.getoption("--env")
-    config_util.ENV = copy(fixture.env)
+    settings.ENV = copy(fixture.env)
 
     return fixture

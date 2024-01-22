@@ -1,14 +1,20 @@
 import os
 
-import jsonpickle as jsonpickle
+from config import config_from_json
 
 import settings
 from settings import PROJECT_ROOT
 
-json_file = os.path.join(PROJECT_ROOT, "config/{}_config.json".format(settings.ENV))
-with open(json_file) as jfile:
-    jsonList = jsonpickle.decode(jfile.read())
 
+def get_config(property_name):
+    json_file = os.path.join(PROJECT_ROOT, "config/{}_config.json".format(settings.ENV))
+    return config_from_json(json_file, read_from_file=True)[property_name]
 
-def get_config(property_to_get):
-    return jsonList[property_to_get]
+# Using jsonpickle
+#
+# with open(json_file) as jfile:
+#     jsonList = jsonpickle.decode(jfile.read())
+#
+#
+# def get_config(property_name):
+#     return jsonList[property_name]

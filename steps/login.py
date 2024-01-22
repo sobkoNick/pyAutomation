@@ -13,8 +13,9 @@ class LoginSteps(ApiSteps):
     # should be used in beforeClass fixture
     def get_jwt(self):
         api_token_key = "api_token"
-        token = get_config("%s" % api_token_key)
+        token = get_config(api_token_key)
         url = get_config("base_url") + get_config("login_url")
+
         response = requests.post(url=url, params=[(api_token_key, token)])
         self.response = response
         return response.json()["jwt"]
