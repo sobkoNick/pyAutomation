@@ -1,5 +1,5 @@
-from steps.login import LoginSteps
+from steps.login_api_client import LoginClient
 
 
 def test_login(app):
-    LoginSteps().send_jwt_request().validate().status_code_is_ok()
+    LoginClient().send_jwt_request().validate().status_code_is_ok()

@@ -1,11 +1,11 @@
 import requests
 from requests import Response
 
-from steps.api_steps import ApiSteps
+from steps.api_client import ApiClient
 from utils.config_util import get_config
 
 
-class LoginSteps(ApiSteps):
+class LoginApiClient(ApiClient):
     def __init__(self):
         super().__init__()
         self.logger = None

@@ -1,0 +1,11 @@
+{
+  "data": {
+    "type": "tests",
+    "attributes": {
+      "title": "auto test1",
+      "description": "The first autotest to post as precondition",
+      "suite_id": "002a0989",
+      "priority": 0
+    }
+  }
+}
