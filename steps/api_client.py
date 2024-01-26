@@ -1,5 +1,8 @@
-from steps.validator import Validator
+import json
 
+import requests
+
+from steps.validator import Validator
 from utils import url_maker
 
 
@@ -27,12 +30,58 @@ class ApiClient:
         self.get_by_id_url = url_map['get_by_id']
         self.delete_url = url_map['delete']
 
-    # todo use json approach for configs, data to post and to verify
-
     def get_headers(self):
         return {"Authorization": self.token}
 
-    def validate(self) -> Validator:
+    # ------- API CALLS -------
+
+    def get(self, url_params: list):
+        """
+        :param url_params: a list with params to format url with
+        :return: self
+        """
+        self.response = requests.get(url=self.get_url.format(*url_params), headers=self.get_headers())
+        return self
+
+    def get_by_id(self, url_params: list):
+        """
+        :param url_params: a list with params to format url with. should include id to get
+        :return: self
+        """
+        self.response = requests.get(url=self.get_by_id_url.format(*url_params), headers=self.get_headers())
+        return self
+
+    def post(self, url_params: list, new_obj):
+        """
+        :param url_params: a list with params to format url with
+        :param new_obj: object to be posted
+        :return: self
+        """
+        self.response = requests.post(url=self.post_url.format(*url_params),
+                                      data=json.dumps(new_obj),
+                                      headers=self.get_headers())
+        return self
+
+    def put(self, url_params: list, obj):
+        """
+        :param url_params: a list with params to format url with. should include id to update
+        :param obj: object to be updated
+        :return: self
+        """
+        self.response = requests.put(url=self.put_url.format(*url_params),
+                                     data=json.dumps(obj),
+                                     headers=self.get_headers())
+        return self
+
+    def delete(self, url_params: list):
+        """
+        :param url_params: a list with params to format url with. should include id to delete
+        :return: self
+        """
+        self.response = requests.delete(url=self.delete_url.format(*url_params), headers=self.get_headers())
+        return self
+
+    def validate_that(self) -> Validator:
         """
         Returns validator to check response result
         :rtype: Validator

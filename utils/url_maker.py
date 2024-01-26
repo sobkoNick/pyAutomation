@@ -16,11 +16,11 @@ def get_urls(endpoint):
     @param endpoint: Service name
     @return: map of urls that will be used in requests
     """
-    post_url = None
-    put_url = None
-    get_url = None
-    get_by_id_url = None
-    delete_url = None
+    post_url = ""
+    put_url = ""
+    get_url = ""
+    get_by_id_url = ""
+    delete_url = ""
 
     for item in jsonList:
         if item["endpoint"] == endpoint:

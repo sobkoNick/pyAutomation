@@ -6,16 +6,15 @@ from utils.config_util import get_config
 
 
 class LoginApiClient(ApiClient):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, endpoint):
+        super().__init__(endpoint=endpoint)
         self.logger = None
 
     def get_jwt(self) -> Response:
         api_token_key = "api_token"
         token = get_config(api_token_key)
-        url = get_config("base_url") + get_config("login_url")
 
-        response = requests.post(url=url, params=[(api_token_key, token)])
+        response = requests.post(url=self.post_url, params=[(api_token_key, token)])
         self.response = response
         return response
 

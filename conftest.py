@@ -3,8 +3,9 @@ from copy import copy
 import pytest
 
 import settings
+from constants import endpoint_names
 from fixture.application import Application
-from steps.login_api_client import LoginClient
+from steps.login_api_client import LoginApiClient
 
 
 #  getting environment argument
@@ -30,7 +31,7 @@ def app(request):
 
 
 def request_and_verify_jwt():
-    jwt_response = LoginClient().get_jwt()
+    jwt_response = LoginApiClient(endpoint_names.LOGIN_ENDPOINT).get_jwt()
     code = jwt_response.status_code
     jwt_token = jwt_response.json()["jwt"]
     if code != 200 or not jwt_token.strip():

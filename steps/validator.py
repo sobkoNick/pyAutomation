@@ -8,3 +8,4 @@ class Validator:
     def status_code_is_ok(self):
         actual_status_code = self.response.status_code
         assert actual_status_code == 200, f"Actual status code {actual_status_code} is not 200 OK"
+        return self
