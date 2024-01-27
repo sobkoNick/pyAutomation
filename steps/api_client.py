@@ -58,7 +58,7 @@ class ApiClient:
         :return: self
         """
         self.response = requests.post(url=self.post_url.format(*url_params),
-                                      data=json.dumps(new_obj),
+                                      json=new_obj,
                                       headers=self.get_headers())
         return self
 
@@ -69,7 +69,7 @@ class ApiClient:
         :return: self
         """
         self.response = requests.put(url=self.put_url.format(*url_params),
-                                     data=json.dumps(obj),
+                                     json=obj,
                                      headers=self.get_headers())
         return self
 
@@ -80,6 +80,9 @@ class ApiClient:
         """
         self.response = requests.delete(url=self.delete_url.format(*url_params), headers=self.get_headers())
         return self
+
+    def get_response_body(self):
+        return self.response.json()
 
     def validate_that(self) -> Validator:
         """
