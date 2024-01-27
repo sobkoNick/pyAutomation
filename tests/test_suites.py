@@ -28,6 +28,7 @@ def default_suite(app):
 
 
 def test_get_all_suites(app, default_suite):
+    app.logger.info("test_get_all_suites starts")
     ApiClient(token=app.token, endpoint=SUITES_ENDPOINT) \
         .get([app.project_id]) \
         .validate_that() \

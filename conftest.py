@@ -1,13 +1,13 @@
+import logging
 from copy import copy
 
 import pytest
+from reportportal_client import RPLogger
 
 import settings
 from constants import endpoint_names
 from fixture.application import Application
 from steps.login_api_client import LoginApiClient
-
-
 #  getting environment argument
 from utils import config_util
 
@@ -22,6 +22,12 @@ def pytest_addoption(parser):
 def app(request):
     global fixture
     fixture = Application()
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    logging.setLoggerClass(RPLogger)
+    fixture.logger = logger
+    logger.info("Fixture starts")
 
     fixture.env = request.config.getoption("--env")
     settings.ENV = copy(fixture.env)

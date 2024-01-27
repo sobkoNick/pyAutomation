@@ -3,3 +3,4 @@ pytest==7.4.4
 jsonpickle==3.0.2
 python-configuration==0.9.1
 assertpy==1.1
+pytest-reportportal==5.3.1
