@@ -4,23 +4,25 @@ from dataclasses import dataclass, field
 
 @dataclass(init=False, repr=True, eq=True)
 class SuiteAttributes:
-
     title: str
-    test_count: int
+    test_count: int = field(default=0)
     # the value is not present when we get all suites.
     description: str = field(default="")
 
 
 @dataclass(init=False, repr=True, eq=True)
 class Suite:
-
-    id: str
     type: str
     attributes: SuiteAttributes
+    id: str = field(default=None)
 
     @staticmethod
     def build(json_str):
-        data = json.loads(json_str)
+
+        if 'data' in json.loads(json_str):
+            data = json.loads(json_str)['data']
+        else:
+            data = json.loads(json_str)
         suite = Suite()
         if 'id' in data.keys():
             suite.id = data['id']
