@@ -24,8 +24,6 @@ def app(request):
     fixture = Application()
     fixture.logger = CustomLogger().set_up(__name__)
 
-    fixture.logger.info("Fixture starts")
-
     fixture.env = request.config.getoption("--env")
     settings.ENV = copy(fixture.env)
     fixture.token = request_and_verify_jwt(fixture.logger)

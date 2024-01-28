@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 
 from _pytest.fixtures import fixture
 
@@ -17,7 +18,6 @@ def default_suite(app):
         .post(url_params=[app.project_id], new_obj=data) \
         .validate_that().status_code_is_ok().get_response_body()
     suite = Suite.build(json.dumps(suite['data']))
-    suite.attributes.description = ""
 
     # passes suite into each test method in module
     yield suite
@@ -29,20 +29,32 @@ def default_suite(app):
 
 def test_get_all_suites(app, default_suite):
     """
-    A simple test that gets all suites and check that the default is present
+    Test gets all suites and checks that the default is present
     """
+    suite = deepcopy(default_suite)
+    suite.attributes.description = ""
     ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
         .get([app.project_id]) \
         .validate_that() \
         .status_code_is_ok() \
-        .body_contains(default_suite)
+        .body_contains(suite)
 
 
-def test_1(app, default_suite):
+def test_get_by_id(app, default_suite):
+    """
+    Test gets suite by id and checks that the default suite is returned
+    """
+    ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
+        .get_by_id([app.project_id, default_suite.id]) \
+        .validate_that() \
+        .status_code_is_ok() \
+        .body_equals(default_suite)
+
+
+def test_intended_to_fail(app, default_suite):
     """
     A simple test that gets all suites and check that the default is present
     """
-    assert False, "expected "
+    assert False, "expected Failure"
 
 # TODO add test for all crud operations
-# TODO added console and report portal logging

@@ -4,8 +4,10 @@ from reportportal_client import step
 from steps.validator import Validator
 from utils import url_maker
 
-
 # Base class for all API steps classes
+EMPTY_STR = ""
+
+
 class ApiClient:
     def __init__(self, token="", endpoint="", logger=None):
         self.token = token
@@ -43,9 +45,9 @@ class ApiClient:
         headers = self.get_headers()
         url = self.get_url.format(*url_params)
 
-        self.log_request("GET", headers, url, "")
+        self.log_request("GET", headers, url, EMPTY_STR)
         self.response = requests.get(url=url, headers=headers)
-        self.log_response(self.response)
+        self.log_response()
         return self
 
     @step
@@ -54,7 +56,12 @@ class ApiClient:
         :param url_params: a list with params to format url with. should include id to get
         :return: self
         """
-        self.response = requests.get(url=self.get_by_id_url.format(*url_params), headers=self.get_headers())
+        headers = self.get_headers()
+        url = self.get_by_id_url.format(*url_params)
+
+        self.log_request("GET", headers, url, EMPTY_STR)
+        self.response = requests.get(url=url, headers=headers)
+        self.log_response()
         return self
 
     @step
@@ -64,9 +71,12 @@ class ApiClient:
         :param new_obj: object to be posted
         :return: self
         """
-        self.response = requests.post(url=self.post_url.format(*url_params),
-                                      json=new_obj,
-                                      headers=self.get_headers())
+        headers = self.get_headers()
+        url = self.post_url.format(*url_params)
+
+        self.log_request("POST", headers, url, new_obj)
+        self.response = requests.post(url=url, json=new_obj, headers=headers)
+        self.log_response()
         return self
 
     @step
@@ -76,9 +86,12 @@ class ApiClient:
         :param obj: object to be updated
         :return: self
         """
-        self.response = requests.put(url=self.put_url.format(*url_params),
-                                     json=obj,
-                                     headers=self.get_headers())
+        headers = self.get_headers()
+        url = self.put_url.format(*url_params)
+
+        self.log_request("PUT", headers, url, obj)
+        self.response = requests.put(url=url, json=obj, headers=headers)
+        self.log_response()
         return self
 
     @step
@@ -87,7 +100,12 @@ class ApiClient:
         :param url_params: a list with params to format url with. should include id to delete
         :return: self
         """
-        self.response = requests.delete(url=self.delete_url.format(*url_params), headers=self.get_headers())
+        headers = self.get_headers()
+        url = self.delete_url.format(*url_params)
+
+        self.log_request("DELETE", headers, url, EMPTY_STR)
+        self.response = requests.delete(url=url, headers=headers)
+        self.log_response()
         return self
 
     def get_response_body(self):
@@ -96,8 +114,8 @@ class ApiClient:
     def log_request(self, method, headers, url, body):
         self.logger.info(f"{method} url = {url}\nheaders = {headers}\nbody = {body}")
 
-    def log_response(self, response):
-        self.logger.info(f"Response \ncode = {response.status_code}\ntext = {response.text}")
+    def log_response(self):
+        self.logger.info(f"Response \ncode = {self.response.status_code}\ntext = {self.response.text}")
 
     def validate_that(self) -> Validator:
         """
