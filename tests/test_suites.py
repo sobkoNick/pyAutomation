@@ -13,7 +13,7 @@ def default_suite(app):
         data = json.load(json_data)
 
     # creates default suite for tests
-    suite = ApiClient(token=app.token, endpoint=SUITES_ENDPOINT) \
+    suite = ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
         .post(url_params=[app.project_id], new_obj=data) \
         .validate_that().status_code_is_ok().get_response_body()
     suite = Suite.build(json.dumps(suite['data']))
@@ -23,16 +23,26 @@ def default_suite(app):
     yield suite
 
     # deletes the default fixture after run of all test methods in module
-    ApiClient(token=app.token, endpoint=SUITES_ENDPOINT) \
+    ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
         .delete(url_params=[app.project_id, suite.id]).validate_that().status_code_is_ok()
 
 
 def test_get_all_suites(app, default_suite):
-    app.logger.info("test_get_all_suites starts")
-    ApiClient(token=app.token, endpoint=SUITES_ENDPOINT) \
+    """
+    A simple test that gets all suites and check that the default is present
+    """
+    ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
         .get([app.project_id]) \
         .validate_that() \
         .status_code_is_ok() \
         .body_contains(default_suite)
 
+
+def test_1(app, default_suite):
+    """
+    A simple test that gets all suites and check that the default is present
+    """
+    assert False, "expected "
+
 # TODO add test for all crud operations
+# TODO added console and report portal logging

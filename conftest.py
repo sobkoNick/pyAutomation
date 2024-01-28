@@ -1,8 +1,7 @@
-import logging
 from copy import copy
 
 import pytest
-from reportportal_client import RPLogger
+from reportportal_client import step
 
 import settings
 from constants import endpoint_names
@@ -10,6 +9,7 @@ from fixture.application import Application
 from steps.login_api_client import LoginApiClient
 #  getting environment argument
 from utils import config_util
+from utils.logger import CustomLogger
 
 
 def pytest_addoption(parser):
@@ -22,22 +22,20 @@ def pytest_addoption(parser):
 def app(request):
     global fixture
     fixture = Application()
+    fixture.logger = CustomLogger().set_up(__name__)
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    logging.setLoggerClass(RPLogger)
-    fixture.logger = logger
-    logger.info("Fixture starts")
+    fixture.logger.info("Fixture starts")
 
     fixture.env = request.config.getoption("--env")
     settings.ENV = copy(fixture.env)
-    fixture.token = request_and_verify_jwt()
+    fixture.token = request_and_verify_jwt(fixture.logger)
     fixture.project_id = config_util.get_config("project_id")
     return fixture
 
 
-def request_and_verify_jwt():
-    jwt_response = LoginApiClient(endpoint_names.LOGIN_ENDPOINT).get_jwt()
+@step("Sends request from fixture to get jwt token")
+def request_and_verify_jwt(logger):
+    jwt_response = LoginApiClient(endpoint_names.LOGIN_ENDPOINT, logger).get_jwt()
     code = jwt_response.status_code
     jwt_token = jwt_response.json()["jwt"]
     if code != 200 or not jwt_token.strip():

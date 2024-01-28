@@ -1,4 +1,5 @@
 import requests
+from reportportal_client import step
 from requests import Response
 
 from steps.api_client import ApiClient
@@ -6,10 +7,10 @@ from utils.config_util import get_config
 
 
 class LoginApiClient(ApiClient):
-    def __init__(self, endpoint):
-        super().__init__(endpoint=endpoint)
-        self.logger = None
+    def __init__(self, endpoint, logger):
+        super().__init__(endpoint=endpoint, logger=logger)
 
+    @step
     def get_jwt(self) -> Response:
         api_token_key = "api_token"
         token = get_config(api_token_key)

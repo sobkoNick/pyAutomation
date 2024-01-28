@@ -1,6 +1,5 @@
-import json
-
 import requests
+from reportportal_client import step
 
 from steps.validator import Validator
 from utils import url_maker
@@ -8,11 +7,11 @@ from utils import url_maker
 
 # Base class for all API steps classes
 class ApiClient:
-    def __init__(self, token="", endpoint=""):
+    def __init__(self, token="", endpoint="", logger=None):
         self.token = token
         self.endpoint = endpoint
         self.response = None
-        self.logger = None
+        self.logger = logger
 
         self.post_url = None
         self.put_url = None
@@ -35,14 +34,21 @@ class ApiClient:
 
     # ------- API CALLS -------
 
+    @step
     def get(self, url_params: list):
         """
         :param url_params: a list with params to format url with
         :return: self
         """
-        self.response = requests.get(url=self.get_url.format(*url_params), headers=self.get_headers())
+        headers = self.get_headers()
+        url = self.get_url.format(*url_params)
+
+        self.log_request("GET", headers, url, "")
+        self.response = requests.get(url=url, headers=headers)
+        self.log_response(self.response)
         return self
 
+    @step
     def get_by_id(self, url_params: list):
         """
         :param url_params: a list with params to format url with. should include id to get
@@ -51,6 +57,7 @@ class ApiClient:
         self.response = requests.get(url=self.get_by_id_url.format(*url_params), headers=self.get_headers())
         return self
 
+    @step
     def post(self, url_params: list, new_obj):
         """
         :param url_params: a list with params to format url with
@@ -62,6 +69,7 @@ class ApiClient:
                                       headers=self.get_headers())
         return self
 
+    @step
     def put(self, url_params: list, obj):
         """
         :param url_params: a list with params to format url with. should include id to update
@@ -73,6 +81,7 @@ class ApiClient:
                                      headers=self.get_headers())
         return self
 
+    @step
     def delete(self, url_params: list):
         """
         :param url_params: a list with params to format url with. should include id to delete
@@ -83,6 +92,12 @@ class ApiClient:
 
     def get_response_body(self):
         return self.response.json()
+
+    def log_request(self, method, headers, url, body):
+        self.logger.info(f"{method} url = {url}\nheaders = {headers}\nbody = {body}")
+
+    def log_response(self, response):
+        self.logger.info(f"Response \ncode = {response.status_code}\ntext = {response.text}")
 
     def validate_that(self) -> Validator:
         """

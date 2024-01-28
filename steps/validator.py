@@ -1,5 +1,6 @@
 import json
 
+from reportportal_client import step
 from requests import Response
 from assertpy import assert_that
 
@@ -8,6 +9,7 @@ class Validator:
     def __init__(self, response: Response):
         self.response = response
 
+    @step
     def status_code_is_ok(self):
         actual_status_code = self.response.status_code
         assert_that(actual_status_code, f"Actual status code {actual_status_code} is not 200 OK")\
@@ -15,6 +17,7 @@ class Validator:
         # assert actual_status_code == 200, f"Actual status code {actual_status_code} is not 200 OK"
         return self
 
+    @step
     def body_contains(self, expected_obj):
         """
         Verifies response body with list of items contains expected_obj
