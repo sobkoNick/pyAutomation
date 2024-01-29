@@ -25,12 +25,3 @@ class CustomLogger:
 
         self.logger = logger
         return self.logger
-
-    def log_request_parameters(self, type_of_request, url, headers, body):
-        self.logger.info("%s url = %s" % (type_of_request, url))
-        self.logger.info("%s header = %s" % (type_of_request, headers))
-        self.logger.info("%s body = %s" % (type_of_request, body))
-
-    def log_response(self, response):
-        self.logger.info("Response code = %s" % response.status_code)
-        self.logger.info("Response text = %s" % response.text)

@@ -1,3 +1,4 @@
+import curl
 import requests
 from reportportal_client import step
 
@@ -45,9 +46,8 @@ class ApiClient:
         headers = self.get_headers()
         url = self.get_url.format(*url_params)
 
-        self.log_request("GET", headers, url, EMPTY_STR)
         self.response = requests.get(url=url, headers=headers)
-        self.log_response()
+        self.log_request_and_response()
         return self
 
     @step
@@ -59,9 +59,8 @@ class ApiClient:
         headers = self.get_headers()
         url = self.get_by_id_url.format(*url_params)
 
-        self.log_request("GET", headers, url, EMPTY_STR)
         self.response = requests.get(url=url, headers=headers)
-        self.log_response()
+        self.log_request_and_response()
         return self
 
     @step
@@ -74,9 +73,8 @@ class ApiClient:
         headers = self.get_headers()
         url = self.post_url.format(*url_params)
 
-        self.log_request("POST", headers, url, new_obj)
         self.response = requests.post(url=url, json=new_obj, headers=headers)
-        self.log_response()
+        self.log_request_and_response()
         return self
 
     @step
@@ -89,9 +87,8 @@ class ApiClient:
         headers = self.get_headers()
         url = self.put_url.format(*url_params)
 
-        self.log_request("PUT", headers, url, obj)
         self.response = requests.put(url=url, json=obj, headers=headers)
-        self.log_response()
+        self.log_request_and_response()
         return self
 
     @step
@@ -103,18 +100,19 @@ class ApiClient:
         headers = self.get_headers()
         url = self.delete_url.format(*url_params)
 
-        self.log_request("DELETE", headers, url, EMPTY_STR)
         self.response = requests.delete(url=url, headers=headers)
-        self.log_response()
+        self.log_request_and_response()
         return self
 
     def get_response_body(self):
         return self.response.json()
 
-    def log_request(self, method, headers, url, body):
-        self.logger.info(f"{method} url = {url}\nheaders = {headers}\nbody = {body}")
+    # used curl instead in the method below
+    # def log_request(self, method, headers, url, body):
+    #     self.logger.info(f"{method} url = {url}\nheaders = {headers}\nbody = {body}")
 
-    def log_response(self):
+    def log_request_and_response(self):
+        self.logger.info(f"Request \n{curl.parse(self.response, print_it=False, return_it=True)}")
         self.logger.info(f"Response \ncode = {self.response.status_code}\ntext = {self.response.text}")
 
     def validate_that(self) -> Validator:
