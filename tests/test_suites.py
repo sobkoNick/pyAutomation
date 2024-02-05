@@ -81,9 +81,3 @@ class TestSuites:
             .validate_that() \
             .status_code_is_ok() \
             .body_equals(Suite.build(json.dumps(new_suite)))
-
-    def test_intended_to_fail(self, app, default_suite):
-        """
-        A simple test that fails for the report
-        """
-        assert False, "expected Failure"
