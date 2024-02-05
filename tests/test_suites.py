@@ -30,7 +30,7 @@ class TestSuites:
         # deletes the default suite after run of all test methods in module
         app.logger.info("Deleting default fixture after test run")
         ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
-            .delete(url_params=[app.project_id, suite.id]).validate_that().status_code_is_ok()
+            .delete(url_params=[app.project_id, suite.id]).validate_that()
 
     @fixture(scope="module")
     def new_suite(self, app):
@@ -81,3 +81,16 @@ class TestSuites:
             .validate_that() \
             .status_code_is_ok() \
             .body_equals(Suite.build(json.dumps(new_suite)))
+
+    def test_delete(self, app, default_suite):
+        """
+        Test deletes suite by id and then tries to get it by id
+        """
+        ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
+            .delete([app.project_id, default_suite.id]) \
+            .validate_that() \
+            .status_code_is_ok()
+        ApiClient(token=app.token, endpoint=SUITES_ENDPOINT, logger=app.logger) \
+            .get_by_id([app.project_id, default_suite.id]) \
+            .validate_that() \
+            .status_code_is(404)
