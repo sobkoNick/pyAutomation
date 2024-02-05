@@ -17,6 +17,14 @@ class Validator:
         return self
 
     @step
+    def status_code_is(self, status_code):
+        actual_status_code = self.response.status_code
+        assert_that(actual_status_code,
+                    f"Actual status code {actual_status_code} differs from expected {status_code}") \
+            .is_equal_to(status_code)
+        return self
+
+    @step
     def body_contains(self, expected_obj):
         """
         Verifies response body with list of items contains expected_obj
