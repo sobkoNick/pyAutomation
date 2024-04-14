@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass, field
 
 
+# Bad solution. Use pydantic instead as in pyAutomationSelen project
 @dataclass(init=False, repr=True, eq=True)
 class SuiteAttributes:
     title: str
